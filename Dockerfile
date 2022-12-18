@@ -65,7 +65,7 @@ RUN cp --parents --archive --target-directory=/tmp/rootfs /usr/local/lib
 # and/or will not work correctly E.g. idlelib needs tk support, but
 # the -slim Python images do not support tk (libtk is missing).
 RUN rm -rf /tmp/rootfs/usr/local/bin/idle*; \
-    rm -rf /tmp/rootfs/usr/local/bin/lib2to3*; \
+    rm -rf /tmp/rootfs/usr/local/bin/2to3*; \
     rm -rf /tmp/rootfs/usr/local/bin/pip*; \
     rm -rf /tmp/rootfs/usr/local/bin/wheel; \
     rm -rf /tmp/rootfs/usr/local/lib/python3.9/ensurepip; \
