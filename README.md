@@ -3,15 +3,22 @@
 WIP repo for creating [distroless][distroless] or distroless-like containers for multiple Python versions.
 Currently only Python 3.9 Dockerfiles exist, which you can [already get][distroless-python3] from the official distroless images!
 
-## Distroless-ish
+## Compatibility
 
-These images include the `dash` shell, since in general a shell is needed by elements of `os.system`, and by any code that runs `subprocess.run()` and friends with `shell=True`.
-The image necessarily comes with a Python interpreter binary, from which arbitrary commands may be executed even without a shell installed, so inclusion of `dash` is not less secure _per se_.
-See also a [related discussion][distroless-python-shell] on Google's distroless repo.
-
-## Python support
+### Python Versions
 
 Python 3.9.
+
+### Additional System Packages
+
+The [`dash` shell][dash-bullseye] is included, since in general a shell is needed by elements of `os.system`, and by any code that runs `subprocess.run()` and friends with `shell=True`.
+The image necessarily comes with a Python interpreter, from which arbitrary commands may be executed even without a shell installed, so inclusion of `dash` is not less secure _per se_.
+See also a [related discussion][distroless-python-shell] on Google's distroless repo.
+
+Debian's [`libc-bin`][libc-bin-bullseye] is included, which (among other things) provides locales and `/sbin/ldconfig`, the latter being needed to produce a correct `/etc/ld.so.cache`.
+`libc-bin` is also included in Google's distroless Python images.
+
+`libgomp1` is included, as some Python wheels still expect a system install of `libgomp`, for example [LightGBM][lightgbm-libgomp].
 
 ### Standard Library
 
@@ -66,7 +73,10 @@ As for any pre-built image usage, it is the image user's responsibility to ensur
 
 [distroless]: https://github.com/GoogleContainerTools/distroless
 [distroless-python3]: https://github.com/GoogleContainerTools/distroless/tree/main/experimental/python3
+[dash-bullseye]: https://packages.debian.org/bullseye/dash
 [distroless-python-shell]: https://github.com/GoogleContainerTools/distroless/issues/601
+[libc-bin-bullseye]: https://packages.debian.org/bullseye/libc-bin
+[lightgbm-libgomp]: https://github.com/microsoft/LightGBM/issues/4484
 [manylinux2010-policy]: https://peps.python.org/pep-0571/#the-manylinux2010-policy
 [manylinux2014-policy]: https://peps.python.org/pep-0599/#the-manylinux2014-policy
 [docker-official-python-manylinux]: https://github.com/docker-library/python/issues/750
