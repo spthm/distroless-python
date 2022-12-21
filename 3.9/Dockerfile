@@ -1,56 +1,81 @@
-FROM python:3.9-slim-bullseye AS upgrades
+# python:3.9-slim-bullseye
+FROM python@sha256:76ff55a1e3f8d82d79172cf3426f85ac85be8c0b6d38354dbd84f57fc420fe01 AS build
 
-# Python images may lag behind their Debian base images. Try to avoid building an image
-# with CVEs that are already fixed in stable.
+ENV PACKAGES \
+    gcc-10-base \
+    libacl1 \
+    libbz2-1.0 \
+    libc6 \
+    libcom-err2 \
+    libcrypt1 \
+    libexpat1 \
+    libffi7 \
+    libgcc-s1 \
+    libgdbm6 \
+    libgssapi-krb5-2 \
+    libk5crypto3 \
+    libkeyutils1 \
+    libkrb5-3 \
+    libkrb5support0 \
+    liblzma5 \
+    libncursesw6 \
+    libnsl2 \
+    libpcre2-8-0 \
+    libreadline8 \
+    libselinux1 \
+    libsqlite3-0 \
+    libssl1.1 \
+    libtinfo6 \
+    libtirpc-common \
+    libtirpc3 \
+    libuuid1 \
+    zlib1g
 
-# debsecan requires Python3.9. To avoid possible issues with having both the system
-# Python and a Python in /usr/local, we do this in a separate stage.
-# TODO: having to do apt-get update twice wastes time. Can we do this in a
-# single RUN if we just apt-get purge -y --auto-remove desecan at the end?
-# TODO: this could actually be another script, updates.sh? Might make CI easier (can
-# detect if there are any upgrades to install)?
+# TODO: add libdb5.3? and/or remove libgdbm6? (also change test.py!)
+#
+# - dash -
+# os.system may need a shell, obviously as does subprocess with shell=True. This isn't
+# very 'distroless', but is arguably no less secure since similar damage could be done
+# with the python binary itself. See also,
+#   https://github.com/GoogleContainerTools/distroless/issues/601
+#
+# - libc-bin -
+# This gives us ldconfig, used to configure the runtime image, and makes
+# ctypes.find_library() work.
+#
+# - ligbomp -
+# A few packages expect a system install of libgomp, e.g. lightgmb,
+#   https://github.com/microsoft/LightGBM/issues/4484
+#
+# - libstdc++6 -
+# This is for manylinux2010, manylinux2014 compatibility
+ENV PACKAGES_EXTRA \
+    dash \
+    libc-bin \
+    libgomp1 \
+    libstdc++6
+
+ENV PACKAGES_COPYRIGHT \
+    readline-common
+
+
 RUN set -eux; \
     apt-get update; \
-    apt-get install -y --no-install-recommends debsecan
-
-RUN debsecan --suite bullseye --format packages --only-fixed > /tmp/upgrades
-
-
-FROM python:3.9-slim-bullseye AS build
-
-# /tmp/upgrades may include updates to packages that were present in the upgrades stage
-# only because they are debsecan dependencies. Use --only-upgrade to skip those.
-COPY --from=upgrades /tmp/upgrades /tmp/upgrades
-RUN set -eux; \
-    apt-get update; \
-    xargs --arg-file=/tmp/upgrades apt-get install -y --no-install-recommends --only-upgrade; \
-    rm -rf /var/lib/apt/lists/*
-
-# TODO: it would be better if the packages were listed directly in the Dockerfile.
-# Generate Dockerfile with e.g. jinja?
-COPY packages /tmp/packages
-COPY packages-copyright /tmp/packages-copyright
-COPY packages-extra /tmp/packages-extra
-
-RUN set -eux; \
-    apt-get update; \
-    cat /tmp/packages-extra \
-    | grep --invert-match -e '^#' \
-    | xargs --no-run-if-empty apt-get install -y --no-install-recommends; \
+    apt-get install -y --no-install-recommends ${PACKAGES} ${PACKAGES_COPYRIGHT} ${PACKAGES_EXTRA}; \
     rm -rf /var/lib/apt/lists/*
 
 # Find all the files provided by our dependency packages, and copy them to a new root
 # filesystem at /tmp/rootfs.
 RUN mkdir -p /tmp/rootfs
 RUN set -eux; \
-    cat /tmp/packages /tmp/packages-extra \
-    | grep --invert-match -e '^#' \
-    | xargs --no-run-if-empty dpkg --listfiles \
+    echo ${PACKAGES} ${PACKAGES_EXTRA} \
+    | xargs dpkg --listfiles \
     | sort --unique \
     | perl -nE 'chomp; say if -f' \
     | xargs cp --parents --archive --target-directory=/tmp/rootfs
 RUN set -eux; \
-    xargs --arg-file /tmp/packages-copyright dpkg --listfiles \
+    echo ${PACKAGES_COPYRIGHT} \
+    | xargs dpkg --listfiles \
     | grep -i copyright \
     | perl -nE 'chomp; say if -f' \
     | xargs cp --parents --archive --target-directory=/tmp/rootfs
@@ -83,6 +108,8 @@ RUN rm -rf /tmp/rootfs/usr/local/lib/python3.9/site-packages/*
 
 
 FROM gcr.io/distroless/static-debian11
+
+ENV LANG=C.UTF-8
 
 COPY --from=build /tmp/rootfs /
 
