@@ -1,5 +1,7 @@
 # Usage,
-#   docker run --rm -it --entrypoint /bin/sh -v $(pwd)packages.sh:/tmp/packages.sh python:3.9-slim-bullseye /tmp/packages.sh
+#   docker run --rm -it --entrypoint /bin/sh -v $(pwd)/list-packages.sh:/list-packages.sh python:3.9-slim-bullseye /list-packages.sh
+# Note that the full python:3.XY-bullseye image will generate many more dependencies,
+# for example because it includes, and its python links to, X11 shared libraries.
 
 set -eu
 
@@ -18,6 +20,7 @@ find /usr/local/ -type f -executable -exec ldd {} \; 2>&1 \
 | sort --unique \
 | xargs dpkg --search \
 | awk -F ': ' '{print $1}' \
+| sort --unique \
 > "$depsdir/direct"
 
 echo "Found direct dependencies:"
