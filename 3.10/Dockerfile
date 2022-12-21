@@ -58,7 +58,6 @@ ENV PACKAGES_EXTRA \
 ENV PACKAGES_COPYRIGHT \
     readline-common
 
-
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends ${PACKAGES} ${PACKAGES_COPYRIGHT} ${PACKAGES_EXTRA}; \

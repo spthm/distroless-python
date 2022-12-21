@@ -7,16 +7,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--py", type=str, required=True, help="Python version (MAJOR.MINOR)")
 parser.add_argument("--image-name", type=str, required=True, help="Base image name")
 parser.add_argument("--image-digest", type=str, required=True, help="Base image digest")
-parser.add_argument("--updates", type=str, help="Path to a file containing packages to update")
 parser.add_argument("--outfile", type=str, required=True, help="The output file")
 
 args = parser.parse_args()
-
-if args.updates is not None:
-    with open(args.updates) as f:
-        updates = [line.strip() for line in f]
-else:
-    updates = []
 
 env = Environment(
     loader=FileSystemLoader("templates"),
@@ -31,7 +24,6 @@ d = template.render(
     image_name=args.image_name,
     image_id=args.image_digest,
     # image_id="python@sha256:c7f0a41c47f3581ce7032e65fee9ea1a1958fa42140404e492a5927b38b2f631",
-    updates=updates,
 )
 
 with open(args.outfile, "w") as f:
