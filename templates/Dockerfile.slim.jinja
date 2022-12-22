@@ -6,8 +6,6 @@ ENV PACKAGES \
     {{ package }}{{ " \\" if not loop.last else "" }}
 {% endfor %}
 
-# TODO: add libdb5.3? and/or remove libgdbm6? (also change test.py!)
-#
 # - dash -
 # os.system may need a shell, obviously as does subprocess with shell=True. This isn't
 # very 'distroless', but is arguably no less secure since similar damage could be done
