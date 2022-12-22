@@ -1,5 +1,4 @@
 import argparse
-from datetime import datetime
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -23,7 +22,6 @@ d = template.render(
     python_version=args.py,
     image_name=args.image_name,
     image_id=args.image_digest,
-    # image_id="python@sha256:c7f0a41c47f3581ce7032e65fee9ea1a1958fa42140404e492a5927b38b2f631",
 )
 
 with open(args.outfile, "w") as f:

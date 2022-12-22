@@ -1,9 +1,12 @@
 # Usage,
-#   docker run --rm -it --entrypoint /bin/sh -v $(pwd)/list-packages.sh:/list-packages.sh python:3.9-slim-bullseye /list-packages.sh
+#   docker run --rm --entrypoint /bin/sh \
+#     -v $(pwd)/list-packages.sh:/list-packages.sh \
+#     -v /your/output/file:/output \
+#     python:3.9-slim-bullseye /list-packages.sh
 # Note that the full python:3.XY-bullseye image will generate many more dependencies,
 # for example because it includes, and its python links to, X11 shared libraries.
 
-set -eu
+set -eux
 
 depsdir="$(mktemp -d)"
 trap 'rm -rf -- "$depsdir"' EXIT
@@ -57,3 +60,5 @@ grep "^\w" "$depsdir/rdepends" \
 
 echo "\nFinal set of packages to install:"
 cat "$depsdir/all"
+
+cp "$depsdir/all" /output
