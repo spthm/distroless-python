@@ -4,7 +4,6 @@ FROM python@sha256:9430c5ad0286ca319db20286538d5051ad098ae3c38e530fa430953f76b71
 RUN python --version && python -m sysconfig
 
 ENV PACKAGES \
-    libacl1 \
     libbz2-1.0 \
     libc6 \
     libcom-err2 \
@@ -21,9 +20,7 @@ ENV PACKAGES \
     liblzma5 \
     libncursesw6 \
     libnsl2 \
-    libpcre2-8-0 \
     libreadline8 \
-    libselinux1 \
     libsqlite3-0 \
     libssl1.1 \
     libtinfo6 \
@@ -60,6 +57,7 @@ ENV PACKAGES_EXTRA \
 ENV PACKAGES_COPYRIGHT \
     gcc-10-base \
     libtirpc-common \
+    ncurses-base \
     readline-common
 
 RUN set -eux; \
