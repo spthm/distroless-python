@@ -64,12 +64,19 @@ See also a [related discussion][docker-official-python-manylinux] on the Docker 
 
 ## Licence
 
+"Python" is a registered trademark of the Python Software Foundation.
+You can view license information for Python 3 [here][py3-licence].
+
 Files in this repository are under AGPLv3.
-Pre-built images (not yet available) are licensed separately.
 
-View license information for [Python 3][py3-licence].
+The distributed images (not yet available) are licensed separately, under GPL-3+.
 
-As with all Docker images, these likely also contain other software which may be under other licenses (such as Bash, etc from the base distribution, along with any direct or indirect dependencies of the primary software being contained).
+> The images are primarily a Debian-based distribution of the `python` binary (the images are _not_ ["mere aggregations"][mere-aggregate]).
+> These binaries link against software of various licences, including, for example, `libgdbm6` (GPL-3+) and `libkeyutils1` (GPL-2+).
+>
+> GPL-3+ is the resulting compatible licence.
+
+As with all Docker images, these likely also contain other software which may be under other licences.
 
 Some additional license information which was able to be auto-detected might be found in [the `repo-info` repository's `python/` directory][docker-python-repoinfo].
 
@@ -85,4 +92,5 @@ As for any pre-built image usage, it is the image user's responsibility to ensur
 [manylinux2014-policy]: https://peps.python.org/pep-0599/#the-manylinux2014-policy
 [docker-official-python-manylinux]: https://github.com/docker-library/python/issues/750
 [py3-licence]: https://docs.python.org/3/license.html
+[mere-aggregate]: https://www.gnu.org/licenses/gpl-faq.en.html#MereAggregation
 [docker-python-repoinfo]: https://github.com/docker-library/repo-info/tree/master/repos/python
