@@ -1,6 +1,8 @@
 # python:3.8-slim-bullseye
 FROM python@sha256:75b74d058401381b056d00f903dff58262d884025f772ed635a68e9699c36b87 AS build
 
+RUN python --version && python -m sysconfig
+
 ENV PACKAGES \
     libacl1 \
     libbz2-1.0 \
@@ -39,6 +41,9 @@ ENV PACKAGES \
 # This gives us ldconfig, used to configure the runtime image, and makes
 # ctypes.find_library() work.
 #
+# - libgcc-s1 -
+# This is a dependency of libstdc++6.
+#
 # - ligbomp -
 # A few packages expect a system install of libgomp, e.g. lightgmb,
 #   https://github.com/microsoft/LightGBM/issues/4484
@@ -48,6 +53,7 @@ ENV PACKAGES \
 ENV PACKAGES_EXTRA \
     dash \
     libc-bin \
+    libgcc-s1 \
     libgomp1 \
     libstdc++6
 
