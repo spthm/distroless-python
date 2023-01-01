@@ -118,6 +118,8 @@ RUN rm -rf /tmp/rootfs/usr/local/lib/python3.11/site-packages/*
 
 FROM gcr.io/distroless/static-debian11
 
+LABEL org.opencontainers.image.licenses=GPT-3+
+
 ENV LANG=C.UTF-8
 
 COPY --from=build /tmp/rootfs /
