@@ -72,7 +72,7 @@ Files in this repository are under AGPLv3.
 The distributed images (not yet available) are licensed separately, under GPL-3+.
 
 > The images are primarily a Debian-based distribution of the `python` binary (the images are _not_ ["mere aggregations"][mere-aggregate]).
-> These binaries link against software of various licences, including, for example, `libgdbm6` (GPL-3+) and `libkeyutils1` (GPL-2+).
+> These binaries link against software of various licences, including, for example, `libgdbm6` (GPL-3+), `libkeyutils1` (GPL-2+) and `libreadline8` (GPL-3+).
 >
 > GPL-3+ is the resulting compatible licence.
 
