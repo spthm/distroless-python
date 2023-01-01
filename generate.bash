@@ -12,6 +12,14 @@ for py in 3.7 3.8 3.9 3.10 3.11; do
     docker pull "$name"
     digest=$(docker inspect --format='{{index .RepoDigests 0}}' "$name")
 
+    pyv=$( \
+        docker run \
+            --rm \
+            -it \
+            "$digest" \
+            python -c "from sys import version_info; print(f\"{version_info[0]}.{version_info[1]}.{version_info[2]}\")" \
+        | tr -d '[:space:]')
+
     docker run \
         --rm \
         -it \
@@ -27,4 +35,7 @@ for py in 3.7 3.8 3.9 3.10 3.11; do
         --image-digest "$digest" \
         --package-list "$pkgs" \
         --outfile "${py}/Dockerfile"
+
+    mkdir -p "${py}/usr/local/share/doc/python${py}"
+    curl "https://raw.githubusercontent.com/python/cpython/v${pyv}/LICENSE" -o "${py}/usr/local/share/doc/python${py}/copyright"
 done
