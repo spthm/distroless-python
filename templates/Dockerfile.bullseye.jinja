@@ -16,6 +16,9 @@ ENV PACKAGES \
 # This gives us ldconfig, used to configure the runtime image, and makes
 # ctypes.find_library() work.
 #
+# - libgcc-s1 -
+# This is a dependency of libstdc++6.
+#
 # - ligbomp -
 # A few packages expect a system install of libgomp, e.g. lightgmb,
 #   https://github.com/microsoft/LightGBM/issues/4484
@@ -25,10 +28,13 @@ ENV PACKAGES \
 ENV PACKAGES_EXTRA \
     dash \
     libc-bin \
+    libgcc-s1 \
     libgomp1 \
     libstdc++6
 
 ENV PACKAGES_COPYRIGHT \
+    gcc-10-base \
+    libtirpc-common \
     readline-common
 
 RUN set -eux; \

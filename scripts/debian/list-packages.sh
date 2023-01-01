@@ -48,11 +48,13 @@ cat "$depsdir/rdepends"
 # the previous step! We remove,
 #   * debconf, because we do not support package installation in the final image;
 #   * dpkg, ditto, and because it is only required by readline-common;
+#   * gcc-10-base**, because it only includes documentation;
+#   * libtirpc-common**, ditto;
 #   * perl-base, because it is only required by debconf;
-#   * readline-common, because it only includes documentation (nb: we must copy its
-#     copyright notice over); and
+#   * readline-common**, because it only includes documentation; and
 #   * tar, because it is only required by dpkg.
-exclude="-e debconf -e dpkg -e perl-base -e readline-common -e tar"
+# **: we must copy the copyright notices from these docs-only packages.
+exclude="-e debconf -e dpkg -e gcc-10-base -e libtirpc-common -e perl-base -e readline-common -e tar"
 grep "^\w" "$depsdir/rdepends" \
 | sort --unique \
 | grep --invert-match --fixed-strings $exclude \
