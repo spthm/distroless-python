@@ -1,6 +1,8 @@
 # {{ image_name }}
 FROM {{ image_id }} AS build
 
+RUN python --version && python -m sysconfig
+
 ENV PACKAGES \
 {% for package in packages %}
     {{ package }}{{ " \\" if not loop.last else "" }}
