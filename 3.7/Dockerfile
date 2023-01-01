@@ -1,8 +1,7 @@
 # python:3.7-slim-bullseye
-FROM python@sha256:b78a9891c47718add03de9062b58be06f1ea3207ed6ec508e8b93f86c90cd70a AS build
+FROM python@sha256:aa949f5f10e9b28e1f9561fff73d1a359fa8517d4e543451a714d1a4ecc61c56 AS build
 
 ENV PACKAGES \
-    gcc-10-base \
     libacl1 \
     libbz2-1.0 \
     libc6 \
@@ -26,13 +25,10 @@ ENV PACKAGES \
     libsqlite3-0 \
     libssl1.1 \
     libtinfo6 \
-    libtirpc-common \
     libtirpc3 \
     libuuid1 \
     zlib1g
 
-# TODO: add libdb5.3? and/or remove libgdbm6? (also change test.py!)
-#
 # - dash -
 # os.system may need a shell, obviously as does subprocess with shell=True. This isn't
 # very 'distroless', but is arguably no less secure since similar damage could be done
@@ -56,6 +52,8 @@ ENV PACKAGES_EXTRA \
     libstdc++6
 
 ENV PACKAGES_COPYRIGHT \
+    gcc-10-base \
+    libtirpc-common \
     readline-common
 
 RUN set -eux; \
@@ -79,11 +77,17 @@ RUN set -eux; \
     | perl -nE 'chomp; say if -f' \
     | xargs cp --parents --archive --target-directory=/tmp/rootfs
 
+# Print all machine-readable licence information for the packages we are distributing.
+RUN grep -e '^Files:' -e '^License:' /tmp/rootfs/usr/share/doc/*/copyright
+
 # Copy over the Python install. Everything in /usr/local is from Python, but we only
 # want the binaries/libraries.
 RUN mkdir -p /tmp/rootfs/usr/local
 RUN cp --parents --archive --target-directory=/tmp/rootfs /usr/local/bin
 RUN cp --parents --archive --target-directory=/tmp/rootfs /usr/local/lib
+
+# The official Docker images do not include Python's copyright notice in the image.
+COPY ./usr/ /tmp/rootfs/usr/
 
 # Explicitly remove a few things that we do not expect to be required,
 # and/or will not work correctly E.g. idlelib needs tk support, but
