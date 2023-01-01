@@ -118,7 +118,7 @@ RUN rm -rf /tmp/rootfs/usr/local/lib/python3.7/site-packages/*
 
 FROM gcr.io/distroless/static-debian11
 
-LABEL org.opencontainers.image.licenses=GPT-3+
+LABEL org.opencontainers.image.licenses=GPL-3.0-or-later
 
 ENV LANG=C.UTF-8
 
