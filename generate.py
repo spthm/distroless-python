@@ -21,7 +21,7 @@ env = Environment(
     lstrip_blocks=True,
 )
 
-template = env.get_template("Dockerfile.slim.jinja")
+template = env.get_template("Dockerfile.bullseye.jinja")
 d = template.render(
     python_version=args.py,
     image_name=args.image_name,
