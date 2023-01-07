@@ -87,12 +87,16 @@ RUN set -eux; \
     cd /tmp/debs; \
     apt-get update; \
     apt-get download ${PACKAGES} ${PACKAGES_EXTRA} ${PACKAGES_COPYRIGHT}; \
+    # Based on
+    #   https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=883700#10
+    # --force-script-chrootless is necessary, otherwise pre- and post-installation
+    # scripts fail (can't be found).
     DEBIAN_FRONTEND=noninteractive \
         dpkg \
         --force-depends \
-        --force-script-chrootless\
-         --root=/tmp/rootfs \
-         --install /tmp/debs/*.deb; \
+        --force-script-chrootless \
+        --root=/tmp/rootfs \
+        --install /tmp/debs/*.deb; \
     rm -rf /tmp/debs; \
     rm -rf /var/lib/apt/lists/*
 

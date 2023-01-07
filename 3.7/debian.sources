@@ -1,12 +1,12 @@
 Types: deb
-URIs: https://snapshot.debian.org/archive/debian/20230107T162949Z/
+URIs: https://snapshot.debian.org/archive/debian/20230107T172006Z/
 Suites: bullseye bullseye-updates
 Components: main
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 Check-Valid-Until: no
 
 Types: deb
-URIs: https://snapshot.debian.org/archive/debian-security/20230107T162949Z/
+URIs: https://snapshot.debian.org/archive/debian-security/20230107T172006Z/
 Suites: bullseye-security
 Components: main
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
