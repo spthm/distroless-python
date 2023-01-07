@@ -54,11 +54,6 @@ COPY ./debian.sources /etc/apt/sources.list.d/debian.sources
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends ${PACKAGES} ${PACKAGES_COPYRIGHT} ${PACKAGES_EXTRA}; \
-{% if updates|length > 0 %}
-    # The updates list may include updates to packages that were present in the upgrades
-    # stage only because they are debsecan dependencies. Use --only-upgrade to ignore.
-    apt-get install -y --no-install-recommends --only-upgrade ${PACKAGES_UPDATE}; \
-{% endif %}
     rm -rf /var/lib/apt/lists/*
 
 # Find all the files provided by our dependency packages, and copy them to a new root
@@ -79,6 +74,7 @@ RUN set -eux; \
     | xargs cp --parents --archive --target-directory=/tmp/rootfs
 
 # Print all machine-readable licence information for the packages we are distributing.
+# This is not exhaustive; not all copyright files use this format.
 RUN grep -e '^Files:' -e '^License:' /tmp/rootfs/usr/share/doc/*/copyright
 
 # Copy over the Python install. Everything in /usr/local is from Python, but we only
