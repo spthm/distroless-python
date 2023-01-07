@@ -1,4 +1,6 @@
 import argparse
+import urllib.request
+import urllib.response
 from datetime import datetime
 from pathlib import Path
 
@@ -6,6 +8,28 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 _here = Path(__file__).parent
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def http_error_302(self, url, fp, errcode, errmsg, headers, data=None):
+        # Return the initial 302 response so we can examine it's Location header.
+        return urllib.response.addinfourl(fp, headers, url, errcode)
+
+
+def _resolve_snapshot_timestamp(prefix: str) -> str:
+    """Return the most recent snapshot timestamp for a snapshot.debian URL.
+
+    The prefix should be of the form http[s]://snapshot.debian.org/archive/*
+    """
+    now = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+    # Trailing slash is important, otherwise we'll receive a 308 to the URL
+    # with the trailing slash!
+    req = urllib.request.Request(f"{prefix}/{now}/", method="HEAD")
+    response = urllib.request.build_opener(_NoRedirect()).open(req)
+    assert response.status == 302
+
+    *_, timestamp = response.headers["location"].rstrip("/").split("/")
+    return timestamp
+
 
 def _write_render(render: str, to: Path):
     to.parent.mkdir(parents=True, exist_ok=True)
@@ -45,11 +69,16 @@ render = dockerfile.render(
 _write_render(render, _here / args.py / "Dockerfile")
 
 
-now = datetime.utcnow()
-snapshot_timestamp = now.strftime("%Y%m%dT%H%M%SZ")
+debian_timestamp = _resolve_snapshot_timestamp(
+    "https://snapshot.debian.org/archive/debian/"
+)
+security_timestamp = _resolve_snapshot_timestamp(
+    "https://snapshot.debian.org/archive/debian-security/"
+)
 sources = env.get_template("debian.sources.jinja")
 render = sources.render(
     suite=args.suite,
-    timestamp=snapshot_timestamp,
+    debian_timestamp=debian_timestamp,
+    security_timestamp=security_timestamp,
 )
 _write_render(render, _here / args.py / "debian.sources")
