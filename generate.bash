@@ -36,6 +36,6 @@ for py in 3.7 3.8 3.9 3.10 3.11; do
         --package-list "$pkgs" \
         --outfile "${py}/Dockerfile"
 
-    mkdir -p "${py}/usr/local/share/doc/python${py}"
-    curl "https://raw.githubusercontent.com/python/cpython/v${pyv}/LICENSE" -o "${py}/usr/local/share/doc/python${py}/copyright"
+    mkdir -p "${py}/rootfs/usr/local/share/doc/python${py}"
+    curl "https://raw.githubusercontent.com/python/cpython/v${pyv}/LICENSE" -o "${py}/rootfs/usr/local/share/doc/python${py}/copyright"
 done

@@ -75,8 +75,8 @@ RUN mkdir -p /tmp/rootfs/usr/local
 RUN cp --parents --archive --target-directory=/tmp/rootfs /usr/local/bin
 RUN cp --parents --archive --target-directory=/tmp/rootfs /usr/local/lib
 
-# The official Docker images do not include Python's copyright notice in the image.
-COPY ./usr/ /tmp/rootfs/usr/
+# Copy over static files we get from elsewhere, incuding the Python copyright notice.
+COPY ./rootfs/ /tmp/rootfs/
 
 # Explicitly remove a few things that we do not expect to be required,
 # and/or will not work correctly E.g. idlelib needs tk support, but

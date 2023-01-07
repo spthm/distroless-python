@@ -1,5 +1,5 @@
 # python:3.11-slim-bullseye
-FROM python@sha256:8f3997244336ad0f067ad693f85906263a21a7f571b6577a64134aba889bc95e AS build
+FROM python@sha256:39cecc9cde774f9209ad26a0ab2dc4f5d10ba92d2913a835cebea3b402af8e8b AS build
 
 RUN python --version && python -m sysconfig
 
@@ -90,8 +90,8 @@ RUN mkdir -p /tmp/rootfs/usr/local
 RUN cp --parents --archive --target-directory=/tmp/rootfs /usr/local/bin
 RUN cp --parents --archive --target-directory=/tmp/rootfs /usr/local/lib
 
-# The official Docker images do not include Python's copyright notice in the image.
-COPY ./usr/ /tmp/rootfs/usr/
+# Copy over static files we get from elsewhere, incuding the Python copyright notice.
+COPY ./rootfs/ /tmp/rootfs/
 
 # Explicitly remove a few things that we do not expect to be required,
 # and/or will not work correctly E.g. idlelib needs tk support, but
