@@ -71,29 +71,33 @@ RUN set -eux; \
     rm -rf /etc/apt/sources.list.d/*
 COPY ./debian.sources /etc/apt/sources.list.d/debian.sources
 
+# Download .deb files for our dependency packages, and install them to a new root
+# filesystem at /tmp/rootfs.
+RUN mkdir -p /tmp/rootfs; \
+    mkdir -p /tmp/rootfs/var/lib/dpkg/info; \
+    mkdir -p /tmp/rootfs/var/lib/dpkg/updates; \
+    touch /tmp/rootfs/var/lib/dpkg/status
+# We go to some effort to run a dpkg --install, rather than dpkg-deb -x, so that the
+# runtime image has the correct dpkg info in /var/lib/dpkg, and so that -slim tweaks
+# are applied (removing unneeded files like changelogs, etc.)
 RUN set -eux; \
+    rm -rf /tmp/debs; \
+    mkdir /tmp/debs; \
+    chown _apt:root /tmp/debs; \
+    cd /tmp/debs; \
     apt-get update; \
-    apt-get install -y --no-install-recommends ${PACKAGES} ${PACKAGES_COPYRIGHT} ${PACKAGES_EXTRA}; \
+    apt-get download ${PACKAGES} ${PACKAGES_EXTRA} ${PACKAGES_COPYRIGHT}; \
+    DEBIAN_FRONTEND=noninteractive \
+        dpkg \
+        --force-depends \
+        --force-script-chrootless\
+         --root=/tmp/rootfs \
+         --install /tmp/debs/*.deb; \
+    rm -rf /tmp/debs; \
     rm -rf /var/lib/apt/lists/*
 
-# Find all the files provided by our dependency packages, and copy them to a new root
-# filesystem at /tmp/rootfs.
-RUN mkdir -p /tmp/rootfs
-RUN cp --archive --parents --target-directory=/tmp/rootfs /etc/apt/sources.list.d/debian.sources
-RUN set -eux; \
-    echo ${PACKAGES} ${PACKAGES_EXTRA} \
-    | xargs dpkg --listfiles \
-    | sort --unique \
-    | perl -nE 'chomp; say if -f' \
-    | xargs cp --parents --archive --target-directory=/tmp/rootfs
-RUN set -eux; \
-    echo ${PACKAGES_COPYRIGHT} \
-    | xargs dpkg --listfiles \
-    | grep -i copyright \
-    | perl -nE 'chomp; say if -f' \
-    | xargs cp --parents --archive --target-directory=/tmp/rootfs
-
 # Print all machine-readable licence information for the packages we are distributing.
+# This is not exhaustive; not all copyright files use this format.
 RUN grep -e '^Files:' -e '^License:' /tmp/rootfs/usr/share/doc/*/copyright
 
 # Copy over the Python install. Everything in /usr/local is from Python, but we only
