@@ -8,7 +8,8 @@ for py in 3.7 3.8 3.9 3.10 3.11; do
     mkdir -p $(dirname "$pkgs")
     touch "$pkgs"
 
-    name="python:${py}-slim-bullseye"
+    suite="bullseye"
+    name="python:${py}-slim-${suite}"
     docker pull "$name"
     digest=$(docker inspect --format='{{index .RepoDigests 0}}' "$name")
 
@@ -31,10 +32,10 @@ for py in 3.7 3.8 3.9 3.10 3.11; do
 
     python generate.py \
         --py "$py" \
+        --suite "$suite" \
         --image-name "$name" \
         --image-digest "$digest" \
-        --package-list "$pkgs" \
-        --outfile "${py}/Dockerfile"
+        --package-list "$pkgs"
 
     mkdir -p "${py}/rootfs/usr/local/share/doc/python${py}"
     curl "https://raw.githubusercontent.com/python/cpython/v${pyv}/LICENSE" -o "${py}/rootfs/usr/local/share/doc/python${py}/copyright"

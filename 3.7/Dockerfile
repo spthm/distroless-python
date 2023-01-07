@@ -34,6 +34,10 @@ ENV PACKAGES \
 # with the python binary itself. See also,
 #   https://github.com/GoogleContainerTools/distroless/issues/601
 #
+# - debian-archive-keyring -
+# This is for provenance of the installed packages. Our debian.sources file references
+# /usr/share/keyrings/debian-archive-keyring.gpg.
+#
 # - libc-bin -
 # This gives us ldconfig, used to configure the runtime image, and makes
 # ctypes.find_library() work.
@@ -49,6 +53,7 @@ ENV PACKAGES \
 # This is for manylinux2010, manylinux2014 compatibility
 ENV PACKAGES_EXTRA \
     dash \
+    debian-archive-keyring \
     libc-bin \
     libgcc-s1 \
     libgomp1 \
@@ -60,6 +65,12 @@ ENV PACKAGES_COPYRIGHT \
     ncurses-base \
     readline-common
 
+# We install packages from a debian snapshot archive for improved reproducibility.
+RUN set -eux; \
+    rm -rf /etc/apt/sources.list; \
+    rm -rf /etc/apt/sources.list.d/*
+COPY ./debian.sources /etc/apt/sources.list.d/debian.sources
+
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends ${PACKAGES} ${PACKAGES_COPYRIGHT} ${PACKAGES_EXTRA}; \
@@ -68,6 +79,7 @@ RUN set -eux; \
 # Find all the files provided by our dependency packages, and copy them to a new root
 # filesystem at /tmp/rootfs.
 RUN mkdir -p /tmp/rootfs
+RUN cp --archive --parents --target-directory=/tmp/rootfs /etc/apt/sources.list.d/debian.sources
 RUN set -eux; \
     echo ${PACKAGES} ${PACKAGES_EXTRA} \
     | xargs dpkg --listfiles \
