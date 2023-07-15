@@ -1,5 +1,5 @@
 # python:3.10-slim-bullseye
-FROM python@sha256:e5c7f6da1694b867cc209956f9040e98ae372290f108f7f3d2dc84a331fe2801 AS build
+FROM python@sha256:a704ba2899da520dacf80a8b048de02e37476842539a95abc2883fed935a6746 AS build
 
 RUN python --version && python -m sysconfig
 
@@ -8,6 +8,7 @@ ENV PACKAGES \
     libc6 \
     libcom-err2 \
     libcrypt1 \
+    libdb5.3 \
     libexpat1 \
     libffi7 \
     libgcc-s1 \
