@@ -16,8 +16,6 @@ exclude = frozenset(
         "distutils.command.bdist_msi",  # imports 'msilib'
         "distutils.msvc9compiler",  # imports 'winreg'
         "multiprocessing.popen_spawn_win32",  # imports 'msvcrt'
-        # Not available in -slim Python images.
-        "dbm.ndbm",
         # Can't be imported stand-alone; fails due to local import of pgen2.
         "lib2to3.pgen2.conv",
         # Expect command line args.

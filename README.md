@@ -24,16 +24,12 @@ Debian's [`libc-bin`][libc-bin-bullseye] is included, which (among other things)
 
 The following Python standard library packages and binaries are missing from these images,
 
-* `dbm.nbdm`
 * `idle[lib]`
 * `ensurepip`
 * `[lib]2to3`
 * `tkinter`
 * `turtle`
 * `turtledemo`
-
-`dbm.ndbm` is not provided by the `python:*-slim-*` images from which we source our shared libraries and `python` binaries.
-`dbm.gnu` _is_ provided.
 
 `tk` support is not provided by the installed system packages, hence `idle`, `tkinter` and `turtle*` are also removed;
 this is similar to the `python3.9-minimal` and `libpython3.9-stdlib` packages in Debian bullseye, and (hence) to Google's distroless Python image.
