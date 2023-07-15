@@ -1,13 +1,14 @@
 # Distroless containers for Python
 
-WIP repo for creating [distroless][distroless] or distroless-like containers for multiple Python versions.
-Currently only Python 3.9 Dockerfiles exist, which you can [already get][distroless-python3] from the official distroless images!
+This repository contains `Dockerfile`s for [distroless][distroless]-like Python container images, for several Python versions, and helper scripts for generating those `Dockerfile`s.
+Note that you can [already get distroless Python 3.9][distroless-python3] from the official distroless images!
 
 ## Compatibility
 
 ### Python Versions
 
-Python 3.9.
+Python 3.7 - 3.11.
+Currently, only `x86_64` builds have been tested.
 
 ### Additional System Packages
 
@@ -76,7 +77,7 @@ As with all Docker images, these likely also contain other software which may be
 
 Some additional license information which was able to be auto-detected might be found in [the `repo-info` repository's `python/` directory][docker-python-repoinfo].
 
-As for any pre-built image usage, it is the image user's responsibility to ensure that any use of this image complies with any relevant licenses for all software contained within.
+As for any pre-built image usage, it is the image user's responsibility to ensure that any use of this image complies with any relevant licences for all software contained within.
 
 [distroless]: https://github.com/GoogleContainerTools/distroless
 [distroless-python3]: https://github.com/GoogleContainerTools/distroless/tree/main/experimental/python3

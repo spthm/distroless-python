@@ -44,7 +44,7 @@ cat "$depsdir/rdepends"
 # Now,
 #   * get just the packages (drop the dependency information); then
 #   * remove some things we don't actually want in the final image.
-# This set of exlcuded packages requires some manual tweaking, based on the output of
+# This set of excluded packages requires some manual tweaking, based on the output of
 # the previous step! We remove,
 #   * debconf, because we do not support package installation in the final image;
 #   * dpkg, ditto, and because it is only required by readline-common;
