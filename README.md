@@ -1,7 +1,7 @@
 # Distroless containers for Python
 
 This repository contains `Dockerfile`s for [distroless][distroless]-like Python container images, for several Python versions, and helper scripts for generating those `Dockerfile`s.
-Note that you can [already get distroless Python 3.9][distroless-python3] from the official distroless images!
+Note that you can [already get distroless Python 3.11][distroless-python3] from the official distroless images!
 
 ## Compatibility
 
@@ -80,7 +80,7 @@ Some additional license information which was able to be auto-detected might be 
 As for any pre-built image usage, it is the image user's responsibility to ensure that any use of this image complies with any relevant licences for all software contained within.
 
 [distroless]: https://github.com/GoogleContainerTools/distroless
-[distroless-python3]: https://github.com/GoogleContainerTools/distroless/tree/main/experimental/python3
+[distroless-python3]: https://github.com/GoogleContainerTools/distroless/tree/main/python3
 [dash-bullseye]: https://packages.debian.org/bullseye/dash
 [distroless-python-shell]: https://github.com/GoogleContainerTools/distroless/issues/601
 [libc-bin-bullseye]: https://packages.debian.org/bullseye/libc-bin
