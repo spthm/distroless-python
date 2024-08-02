@@ -7,7 +7,7 @@ Note that you can [already get distroless Python 3.11][distroless-python3] from 
 
 ### Python Versions
 
-Python 3.7 - 3.11.
+Python 3.8 - 3.12.
 Currently, only `x86_64` builds have been tested.
 
 ### Additional System Packages

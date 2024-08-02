@@ -3,7 +3,7 @@ set -eux
 tmpdir="$(mktemp -d)"
 trap 'rm -rf -- "$tmpdir"' EXIT
 
-for py in 3.7 3.8 3.9 3.10 3.11; do
+for py in 3.8 3.9 3.10 3.11 3.12; do
     pkgs="${tmpdir}/${py}/packages"
     mkdir -p $(dirname "$pkgs")
     touch "$pkgs"

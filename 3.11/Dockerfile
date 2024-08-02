@@ -1,5 +1,5 @@
 # python:3.11-slim-bullseye
-FROM python@sha256:9b4d90af2003eef5d862f8118d8645d37d170402645a09e48241a3e492a0d4dc AS build
+FROM python@sha256:f9c15e0d3c573a57f54a6099972e23690711808ee232b3e89e09d9c4d066f8c6 AS build
 
 RUN python --version && python -m sysconfig
 
