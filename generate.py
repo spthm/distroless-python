@@ -11,7 +11,7 @@ _here = Path(__file__).parent
 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
     def http_error_302(self, url, fp, errcode, errmsg, headers, data=None):
-        # Return the initial 302 response so we can examine it's Location header.
+        # Return the initial 302 response so we can examine its Location header.
         return urllib.response.addinfourl(fp, headers, url, errcode)
 
 
